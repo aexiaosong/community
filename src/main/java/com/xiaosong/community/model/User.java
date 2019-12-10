@@ -1,11 +1,29 @@
 package com.xiaosong.community.model;
 
 public class User {
+    private Integer id;
     private String name;
     private String accountId;
     private String token;
     private Long gmtCreate;
     private Long gmtModified;
+    private String bio;
+
+    public String getBio() {
+        return bio;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public String getName() {
         return name;
@@ -45,5 +63,17 @@ public class User {
 
     public void setGmtModified(Long gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", accountId='" + accountId + '\'' +
+                ", token='" + token + '\'' +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
+                ", bio='" + bio + '\'' +
+                '}';
     }
 }
