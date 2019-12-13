@@ -4,6 +4,7 @@ import com.xiaosong.community.dto.PaginationDTO;
 import com.xiaosong.community.dto.QuestionDTO;
 import com.xiaosong.community.exception.CustomizeErrorCode;
 import com.xiaosong.community.exception.CustomizeException;
+import com.xiaosong.community.mapper.QuestionExtMapper;
 import com.xiaosong.community.mapper.QuestionMapper;
 import com.xiaosong.community.mapper.UserMapper;
 import com.xiaosong.community.model.Question;
@@ -25,6 +26,9 @@ public class QuestionService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -122,10 +126,13 @@ public class QuestionService {
     }
 
     public void createOrUpdate(Question question) {
-        if (question.getId() == null) {
+        if (question.getId() == 0) {
             // 创建
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setCommentCount(0);
+            question.setViewCount(0);
+            question.setLikeCount(0);
             questionMapper.insert(question);
         } else {
             // 更新
@@ -141,5 +148,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
