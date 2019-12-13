@@ -12,7 +12,11 @@ class CommunityApplicationTests {
     }
     @Test
     public void test(){
-        System.out.println(ClassPath.getClassPath());
+        String classPaths = ClassPath.getClassPath();
+        String[] classPath = classPaths.split(";");
+        for(String s: classPath) {
+            System.out.println(s);
+        }
     }
 
 }
