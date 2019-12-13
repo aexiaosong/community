@@ -1,7 +1,6 @@
 package com.xiaosong.community.controller;
 
 import com.xiaosong.community.dto.QuestionDTO;
-import com.xiaosong.community.mapper.QuestionMapper;
 import com.xiaosong.community.model.Question;
 import com.xiaosong.community.model.User;
 import com.xiaosong.community.service.QuestionService;

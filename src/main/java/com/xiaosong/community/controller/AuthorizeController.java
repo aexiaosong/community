@@ -2,7 +2,6 @@ package com.xiaosong.community.controller;
 
 import com.xiaosong.community.dto.AccessTokenDTO;
 import com.xiaosong.community.dto.GithubUser;
-import com.xiaosong.community.mapper.UserMapper;
 import com.xiaosong.community.model.User;
 import com.xiaosong.community.provider.GithubProvider;
 import com.xiaosong.community.service.UserService;
@@ -32,9 +31,6 @@ public class AuthorizeController {
     private String clientSecret;
     @Value("${github.redirect.uri}")
     private String redirectUri;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
