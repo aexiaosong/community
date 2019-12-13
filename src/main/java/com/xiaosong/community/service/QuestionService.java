@@ -4,6 +4,7 @@ import com.xiaosong.community.dto.PaginationDTO;
 import com.xiaosong.community.dto.QuestionDTO;
 import com.xiaosong.community.exception.CustomizeErrorCode;
 import com.xiaosong.community.exception.CustomizeException;
+import com.xiaosong.community.mapper.QuestionExtMapper;
 import com.xiaosong.community.mapper.QuestionMapper;
 import com.xiaosong.community.mapper.UserMapper;
 import com.xiaosong.community.model.Question;
@@ -22,6 +23,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -141,5 +145,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
