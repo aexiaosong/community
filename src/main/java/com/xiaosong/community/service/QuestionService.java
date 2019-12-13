@@ -2,6 +2,8 @@ package com.xiaosong.community.service;
 
 import com.xiaosong.community.dto.PaginationDTO;
 import com.xiaosong.community.dto.QuestionDTO;
+import com.xiaosong.community.exception.CustomizeErrorCode;
+import com.xiaosong.community.exception.CustomizeException;
 import com.xiaosong.community.mapper.QuestionMapper;
 import com.xiaosong.community.mapper.UserMapper;
 import com.xiaosong.community.model.Question;
@@ -109,6 +111,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);  // 如果问题不存在抛出一个问题没有找到异常
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -131,7 +136,10 @@ public class QuestionService {
             updateQuestion.setTag(question.getTag());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
