@@ -25,10 +25,10 @@ public class QuestionService {
     private QuestionMapper questionMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
-    private QuestionExtMapper questionExtMapper;
+    private UserMapper userMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
