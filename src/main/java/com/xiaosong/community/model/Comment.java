@@ -11,6 +11,8 @@ public class Comment {
 
     private String content;
 
+    private Integer commentCount;
+
     private Long likeCount;
 
     private Long gmtCreate;
@@ -55,6 +57,14 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
     }
 
     public Long getLikeCount() {
