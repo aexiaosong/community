@@ -36,12 +36,13 @@ public class CommentController {
 
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());
-        comment.setContent(commentCreateDTO.getContent());
         comment.setType(commentCreateDTO.getType());
+        comment.setCommentator(user.getId());
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setCommentCount(0);
+        comment.setLikeCount(0L);
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
-        comment.setCommentator(user.getId());
-        comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();
     }
