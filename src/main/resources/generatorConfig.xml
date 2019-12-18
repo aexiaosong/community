@@ -40,9 +40,18 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User"/>
-        <table tableName="question" domainObjectName="Question"/>
-        <table tableName="comment" domainObjectName="Comment"/>
+        <table tableName="user" domainObjectName="User">
+
+        </table>
+        <table tableName="question" domainObjectName="Question">
+
+        </table>
+        <table tableName="comment" domainObjectName="Comment">
+
+        </table>
+        <table tableName="notification" domainObjectName="Notification">
+
+        </table>
 
     </context>
 </generatorConfiguration>
