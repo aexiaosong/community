@@ -7,6 +7,9 @@ import cn.ucloud.ufile.auth.UfileObjectLocalAuthorization;
 import cn.ucloud.ufile.bean.PutObjectResultBean;
 import cn.ucloud.ufile.exception.UfileClientException;
 import cn.ucloud.ufile.exception.UfileServerException;
+import com.xiaosong.community.exception.CustomizeErrorCode;
+import com.xiaosong.community.exception.CustomizeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UCloudProvider {
     @Value("${ucloud.ufile.public-key}")
     private String publicKey;
@@ -40,38 +44,33 @@ public class UCloudProvider {
         if (filePaths.length > 1) {
             generatedFileName = UUID.randomUUID().toString() + "." + filePaths[filePaths.length - 1];
         } else {
-            return null;
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
-
         try {
             ObjectAuthorization objectAuthorization = new UfileObjectLocalAuthorization(publicKey, privateKey);
-            ObjectConfig config = new ObjectConfig("cn-bj", "ufileos.com");
+            ObjectConfig config = new ObjectConfig(region, suffix);
             PutObjectResultBean response = UfileClient.object(objectAuthorization, config)
                     .putObject(fileStream, mimeType)
                     .nameAs(generatedFileName)
-                    .toBucket("mawen")
-                    /**
-                     * 是否上传校验MD5, Default = true
-                     */
-                    //  .withVerifyMd5(false)
-                    /**
-                     * 指定progress callback的间隔, Default = 每秒回调
-                     */
-                    //  .withProgressConfig(ProgressConfig.callbackWithPercent(10))
-                    /**
-                     * 配置进度监听
-                     */
+                    .toBucket(bucketName)
                     .setOnProgressListener((bytesWritten, contentLength) -> {
-
                     })
                     .execute();
+            if (response != null && response.getRetCode() == 0) {
+                String url = UfileClient.object(objectAuthorization, config)
+                        .getDownloadUrlFromPrivateBucket(generatedFileName, bucketName, expires)
+                        .createUrl();
+                return url;
+            } else {
+                log.error("upload error,{}", response);
+                throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
+            }
         } catch (UfileClientException e) {
-            e.printStackTrace();
-            return null;
+            log.error("upload error,{}", fileName, e);
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (UfileServerException e) {
-            e.printStackTrace();
-            return null;
+            log.error("upload error,{}", fileName, e);
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
-        return generatedFileName;
     }
 }
